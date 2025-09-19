@@ -1,0 +1,125 @@
+/* Form container */
+form {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 25px 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Inputs (Name & Price) */
+input[name="name"],
+input[name="price"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[name="name"]:focus,
+input[name="price"]:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 6px rgba(74,144,226,0.3);
+  outline: none;
+}
+
+/* Checkbox */
+label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #4a90e2;
+}
+
+/* Image container */
+.image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* center the file input & preview */
+  gap: 8px;
+  width: 100%;
+}
+
+/* File input */
+.image-container input[type="file"] {
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  min-width: 150px;      /* ensures button isn't too small */
+}
+
+.image-container input[type="file"]:hover {
+  border-color: #4a90e2;
+}
+
+/* Image preview */
+.image-container img {
+  width: 120px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.image-container img:hover {
+  transform: scale(1.05);
+}
+
+/* Submit button */
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4a90e2;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover:not(:disabled) {
+  background-color: #357ABD;
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  background-color: #a6c8f0;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  form {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  input[name="name"],
+  input[name="price"],
+  .image-container input[type="file"],
+  button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .image-container img {
+    width: 100px;
+  }
+}

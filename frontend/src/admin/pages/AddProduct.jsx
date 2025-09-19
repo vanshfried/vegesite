@@ -1,16 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import "../../css/AddProduct.css";
 
 function AddProduct() {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
-    stock: true, // Boolean matches backend
+    stock: true,
   });
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
 
-  // Handle form input changes
+  const fileInputRef = useRef(null); // ref for file input
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -19,31 +21,25 @@ function AddProduct() {
     }));
   };
 
-  // Handle image selection
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     if (!file.type.startsWith("image/")) {
       alert("Please select a valid image file.");
       return;
     }
 
     setImage(file);
-
-    // Cleanup previous preview
     if (preview) URL.revokeObjectURL(preview);
     setPreview(URL.createObjectURL(file));
   };
 
-  // Cleanup preview URL when component unmounts
   useEffect(() => {
     return () => {
       if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
 
-  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.price) {
@@ -62,7 +58,6 @@ function AddProduct() {
       data.append("name", formData.name);
       data.append("price", priceNum);
       data.append("stock", formData.stock ? "true" : "false");
-
       if (image) data.append("image", image);
 
       await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, data, {
@@ -70,9 +65,15 @@ function AddProduct() {
       });
 
       alert("Product added successfully!");
+      // Reset form fields
       setFormData({ name: "", price: "", stock: true });
       setImage(null);
       setPreview(null);
+
+      // Reset file input element
+      if (fileInputRef.current) {
+        fileInputRef.current.value = null;
+      }
     } catch (err) {
       console.error(err);
       alert("Failed to add product.");
@@ -80,7 +81,8 @@ function AddProduct() {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: "400px" }}>
+    <form onSubmit={handleSubmit}>
+      {/* Name input */}
       <input
         name="name"
         placeholder="Product Name"
@@ -89,6 +91,7 @@ function AddProduct() {
         required
       />
 
+      {/* Price input */}
       <input
         name="price"
         type="number"
@@ -100,6 +103,7 @@ function AddProduct() {
         required
       />
 
+      {/* Stock checkbox */}
       <label>
         <input
           type="checkbox"
@@ -110,21 +114,20 @@ function AddProduct() {
         In Stock
       </label>
 
-      <input type="file" accept="image/*" onChange={handleImageChange} required />
-
-      {preview && (
-        <img
-          src={preview}
-          alt="Preview"
-          style={{ width: "150px", marginTop: "10px", borderRadius: "8px" }}
+      {/* Image input & preview */}
+      <div className="image-container">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          ref={fileInputRef} // attach ref here
+          required
         />
-      )}
+        {preview && <img src={preview} alt="Preview" />}
+      </div>
 
-      <button
-        type="submit"
-        disabled={!formData.name || !formData.price}
-        style={{ marginTop: "10px" }}
-      >
+      {/* Submit button */}
+      <button type="submit" disabled={!formData.name || !formData.price || !image}>
         Add Product
       </button>
     </form>
