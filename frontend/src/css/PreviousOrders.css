@@ -1,0 +1,118 @@
+/*
+  This CSS file styles the PreviousOrders.jsx component.
+*/
+
+.previous-orders-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f8f9fa; /* Light background for the container */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.previous-orders-content {
+  /* Provides inner spacing and structure */
+  padding: 0;
+}
+
+.previous-orders-content h1 {
+  text-align: center;
+  color: #2c3e50; /* Dark gray-blue for the heading */
+  font-size: 2.2rem;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between each order card */
+}
+
+.order-card {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6; /* Light gray border */
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+.order-card:hover {
+  transform: translateY(-5px); /* Lift effect on hover */
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.order-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #34495e;
+}
+
+.status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.status.delivered {
+  background-color: #28a745; /* Green for delivered */
+}
+
+.status.cancelled {
+  background-color: #dc3545; /* Red for cancelled */
+}
+
+.order-card p {
+  margin: 8px 0;
+  color: #555;
+  font-size: 1rem;
+}
+
+.item-list {
+  list-style-type: none; /* Removes the default bullet points */
+  padding: 0;
+  margin-top: 15px;
+}
+
+.item-list li {
+  background-color: #f2f4f6; /* Subtle background for each item */
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-list li:last-child {
+  margin-bottom: 0;
+}
+
+.no-orders-message {
+  text-align: center;
+  color: #777;
+  font-size: 1.1rem;
+  margin-top: 50px;
+}
+
+/* Optional: Add media queries for better mobile responsiveness */
+@media (max-width: 768px) {
+  .previous-orders-container {
+    margin: 20px;
+    padding: 15px;
+  }
+}
