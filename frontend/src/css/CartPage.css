@@ -1,0 +1,124 @@
+.cart-page {
+  max-width: 600px; /* narrower for balanced look */
+  margin: 40px auto;
+  padding: 25px 20px;
+  background: #fffaf0;
+  border-radius: 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.cart-page h1 {
+  font-size: 30px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #d82525;
+}
+
+.cart-page ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+
+.cart-page li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 12px; /* gap between items */
+  background: #fff; /* card-like feel */
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.cart-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1; /* ensures left column grows */
+}
+
+.cart-item-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.cart-item-name {
+  font-size: 16px;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.cart-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  min-width: 140px; /* ensures all right columns align */
+  text-align: right;
+}
+
+.cart-item-qty {
+  font-size: 15px;
+}
+
+.cart-page button {
+  display: block;
+  margin: 20px auto 0;
+  padding: 12px 28px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.cart-page button:hover {
+  background: #1e7e34;
+}
+
+.cart-page .delete-btn {
+  background-color: #d82525;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.cart-empty {
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+  padding: 80px 20px;
+}
+
+.cart-empty span {
+  display: block;
+  margin-top: 15px;
+  color: #d82525;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .cart-page li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .cart-item-right {
+    align-items: flex-start;
+    min-width: auto;
+  }
+}

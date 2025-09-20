@@ -3,8 +3,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 50px;
-  background-color: #d82525;
-  color: #fff;
+  background-color: #3ca55c; /* leafy green */
+  color: #fffbe6; /* soft cream for contrast */
   box-shadow: 0 3px 8px rgba(0,0,0,0.2);
   position: sticky;
   top: 0;
@@ -12,20 +12,21 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.user-header .logo h1 {
+.logo h1 {
   margin: 0;
   font-size: 26px;
   font-weight: bold;
   letter-spacing: 1px;
+  color: #fffbe6;
 }
 
-.user-header .nav-links {
+.nav-links {
   display: flex;
   gap: 25px;
 }
 
-.user-header .nav-links a {
-  color: #fff;
+.nav-links a {
+  color: #fffbe6;
   text-decoration: none;
   font-weight: 600;
   font-size: 16px;
@@ -34,7 +35,76 @@
   transition: all 0.3s;
 }
 
-.user-header .nav-links a:hover {
-  background-color: #fff;
-  color: #d82525;
+.nav-links a:hover {
+  background-color: #f39c12; /* carrot-orange hover */
+  color: #fff;
+}
+
+/* Hamburger menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  height: 3px;
+  background: #fffbe6;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: -300px; /* hidden above initially */
+    left: 0;
+    width: 100%;
+    background: #3ca55c; /* same green as header */
+    flex-direction: column;
+    transition: top 0.3s ease;
+    padding: 20px 0;
+    text-align: center;
+  }
+
+  .nav-links.open {
+    top: 60px; /* slide down below header */
+  }
+
+  .nav-links a {
+    padding: 12px 0;
+    font-size: 16px;
+    width: 100%;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .logo h1 {
+    font-size: 20px;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+    padding: 10px 0;
+  }
 }

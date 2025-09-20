@@ -1,13 +1,17 @@
 import { useState } from "react";
+import { useCart } from "../context/CartContext";
 import "../css/ProductCard.css";
+import { useNavigate } from "react-router-dom";
 
-function ProductCard({ product, onBuy }) {
-  const [quantity, setQuantity] = useState(1); // default 1kg for display/input
+function ProductCard({ product }) {
+  const [quantity, setQuantity] = useState(1);
+  const { setCartItemQuantity } = useCart(); // use the replace function
+  const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate();
 
-  const MIN_QTY = 0.1; // 0.1 kg = 100g
-  const MAX_QTY = 25;  // 25 kg
+  const MIN_QTY = 0.1;
+  const MAX_QTY = 25;
 
-  // Generate full image URL
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "";
     return `${import.meta.env.VITE_API_URL}${
@@ -15,12 +19,16 @@ function ProductCard({ product, onBuy }) {
     }`;
   };
 
-  const handleBuy = () => {
+  const handleAdd = () => {
     let finalQty = Number(quantity);
     if (finalQty < MIN_QTY) finalQty = MIN_QTY;
     if (finalQty > MAX_QTY) finalQty = MAX_QTY;
 
-    if (onBuy) onBuy(product, finalQty * 1000); // convert kg to grams
+    // Use setCartItemQuantity to replace quantity instead of adding
+    setCartItemQuantity(product, finalQty);
+
+    setShowPopup(true);
+    setTimeout(() => setShowPopup(false), 3000);
   };
 
   return (
@@ -45,17 +53,25 @@ function ProductCard({ product, onBuy }) {
             type="number"
             min={MIN_QTY}
             max={MAX_QTY}
-            step={0.5} // step of 50g
+            step={0.5}
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
           />
           <span>Kg</span>
-          <button className="buy-btn" onClick={handleBuy}>
-            Buy
+          <button className="buy-btn" onClick={handleAdd}>
+            Add to Cart
           </button>
         </div>
       ) : (
         <p className="out-of-stock">Out of Stock</p>
+      )}
+
+      {/* Popup */}
+      {showPopup && (
+        <div className="cart-popup">
+          <p>{product.name} added to cart!</p>
+          <button onClick={() => navigate("/cart")}>Go to Cart</button>
+        </div>
       )}
     </div>
   );

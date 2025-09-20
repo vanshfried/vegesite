@@ -1,18 +1,63 @@
 .home-page {
   padding: 20px;
-  background-color: #fff7f7;
+  background-color: #f9f9f9;
   min-height: 100vh;
+  font-family: "Inter", sans-serif;
 }
 
 .home-page h1 {
-  color: #d82525;
+  color: #2c3e50;
   text-align: center;
   margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: 600;
 }
 
 .home-product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
-  justify-items: center;
+  padding: 10px;
+}
+
+.cart-popup {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #27ae60;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideUp 0.3s ease;
+}
+
+.cart-popup button {
+  background: white;
+  color: #27ae60;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.cart-popup button:hover {
+  background: #f1f1f1;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

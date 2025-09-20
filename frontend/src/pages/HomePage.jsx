@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
 import "../css/HomePage.css";
+import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { cart } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_URL;
@@ -38,15 +42,16 @@ function HomePage() {
       ) : (
         <div className="home-product-grid">
           {products.map((product) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-              isAdmin={false} // Buy button visible
-              onBuy={(product, quantity) =>
-                alert(`Bought ${quantity}g of ${product.name}`)
-              }
-            />
+            <ProductCard key={product._id} product={product} />
           ))}
+        </div>
+      )}
+
+      {cart.length > 0 && (
+        <div className="cart-popup">
+          <button onClick={() => navigate("/cart")}>
+            Place Order ({cart.length} items)
+          </button>
         </div>
       )}
     </div>
