@@ -1,8 +1,17 @@
 import { useCart } from "../context/CartContext";
 import "../css/CartPage.css";
+import { isUserLoggedIn } from "../utils/auth";
+import { useNavigate } from "react-router-dom";
 
 function CartPage() {
+  const navigate = useNavigate();
+  const loggedIn = isUserLoggedIn();
   const { cart, removeFromCart, clearCart } = useCart();
+
+  if (!loggedIn) {
+    navigate("/login");
+    return null;
+  }
 
   const DELIVERY = 20;
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -13,7 +22,7 @@ function CartPage() {
     clearCart();
   };
 
-  if (cart.length === 0)
+  if (!cart.length)
     return (
       <div className="cart-empty">
         <p>Your cart is empty</p>
@@ -30,9 +39,7 @@ function CartPage() {
             <div className="cart-item-left">
               {item.image && (
                 <img
-                  src={`${import.meta.env.VITE_API_URL}${
-                    item.image.startsWith("/uploads/") ? item.image : `/uploads/${item.image}`
-                  }`}
+                  src={`${import.meta.env.VITE_API_URL}${item.image.startsWith("/uploads/") ? item.image : `/uploads/${item.image}`}`}
                   alt={item.name}
                   className="cart-item-img"
                 />
@@ -40,7 +47,9 @@ function CartPage() {
               <span className="cart-item-name">{item.name}</span>
             </div>
             <div className="cart-item-right">
-              <span className="cart-item-qty">{item.quantity}Kg × ₹{item.price} = ₹{(item.price * item.quantity).toFixed(2)}</span>
+              <span className="cart-item-qty">
+                {item.quantity}Kg × ₹{item.price} = ₹{(item.price * item.quantity).toFixed(2)}
+              </span>
               <button className="delete-btn" onClick={() => removeFromCart(item._id)}>Delete</button>
             </div>
           </li>

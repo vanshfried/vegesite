@@ -1,19 +1,29 @@
-// src/components/Header.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/Header.css";
+import { isUserLoggedIn } from "../utils/auth";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [popup, setPopup] = useState({ message: "", show: false });
   const navigate = useNavigate();
 
-  const isLoggedIn =
-    !!localStorage.getItem("adminToken") || !!localStorage.getItem("userToken");
+  const loggedIn = isUserLoggedIn();
 
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
     localStorage.removeItem("userToken");
     navigate("/", { replace: true });
+  };
+
+  const handleRestrictedClick = (path) => {
+    if (!loggedIn) {
+      setPopup({ message: "Please login to access this page.", show: true });
+      setTimeout(() => setPopup({ message: "", show: false }), 3000);
+    } else {
+      navigate(path);
+    }
+    setMenuOpen(false);
   };
 
   return (
@@ -33,21 +43,26 @@ function Header() {
       </div>
 
       <nav className={`nav-links ${menuOpen ? "open" : ""}`}>
+        {/* Always accessible links */}
         <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
-        <Link to="/cart" onClick={() => setMenuOpen(false)}>Cart</Link>
         <Link to="/about" onClick={() => setMenuOpen(false)}>About</Link>
-        <Link to="/previousorder" onClick={() => setMenuOpen(false)}>Prev. Orders</Link>
 
-        {isLoggedIn ? (
-          <button className="logout-btn" onClick={handleLogout}>
-            Logout
-          </button>
+        {/* Restricted links */}
+        <span className="nav-button" onClick={() => handleRestrictedClick("/cart")}>Cart</span>
+        <span className="nav-button" onClick={() => handleRestrictedClick("/previousorder")}>Prev. Orders</span>
+
+        {/* Login / Logout */}
+        {loggedIn ? (
+          <button className="logout-btn" onClick={handleLogout}>Logout</button>
         ) : (
-          <Link to="/login" onClick={() => setMenuOpen(false)}>
-            Login
-          </Link>
+          <Link to="/login" className="nav-button" onClick={() => setMenuOpen(false)}>Login</Link>
         )}
       </nav>
+
+      {/* Popup */}
+      {popup.show && (
+        <div className="header-popup">{popup.message}</div>
+      )}
     </header>
   );
 }

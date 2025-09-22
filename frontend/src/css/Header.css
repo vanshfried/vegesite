@@ -6,11 +6,11 @@
   padding: 15px 20px;
   background-color: #3ca55c; /* leafy green */
   color: #fffbe6; /* soft cream */
-  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
   position: sticky;
   top: 0;
   z-index: 1000;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Logo */
@@ -30,7 +30,8 @@
 }
 
 /* Nav link styling */
-.nav-links a {
+.nav-links a,
+.nav-button {
   color: #fffbe6;
   text-decoration: none;
   font-weight: 600;
@@ -38,9 +39,13 @@
   padding: 5px 10px;
   border-radius: 5px;
   transition: all 0.3s;
+  cursor: pointer;
+  background: none;
+  border: none;
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-button:hover {
   background-color: #f39c12; /* carrot-orange hover */
   color: #fff;
 }
@@ -99,7 +104,7 @@
 
   .nav-links {
     position: absolute;
-    top: 60px; /* directly under header */
+    top: 60px;
     left: 0;
     width: 100%;
     background: #3ca55c;
@@ -107,21 +112,57 @@
     gap: 10px;
     transition: max-height 0.3s ease;
     overflow: hidden;
-    max-height: 0; /* initially hidden */
+    max-height: 0;
     padding: 0;
     text-align: center;
   }
 
   .nav-links.open {
-    max-height: 500px; /* enough to show all links including logout */
+    max-height: 500px;
     padding: 20px 0;
   }
 
-  .nav-links a, .nav-links .logout-btn {
+  .nav-links a,
+  .nav-links .logout-btn,
+  .nav-button {
     width: 80%;
     margin: 5px auto;
     font-size: 16px;
     padding: 10px 0;
+  }
+}
+
+/* Small popup message under header */
+.header-popup {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  background-color: #f39c12;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  animation: fadein 0.3s, fadeout 0.3s 2.7s;
+}
+
+/* Fade animation for popup */
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeout {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
 
@@ -131,7 +172,9 @@
     font-size: 20px;
   }
 
-  .nav-links a, .nav-links .logout-btn {
+  .nav-links a,
+  .nav-links .logout-btn,
+  .nav-button {
     font-size: 14px;
     padding: 10px 0;
   }

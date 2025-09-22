@@ -1,73 +1,86 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useAuth } from "./AuthContext";
+import axios from "axios";
+import { getToken } from "../utils/auth";
 
 const CartContext = createContext();
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const CartProvider = ({ children }) => {
   const { loggedIn } = useAuth();
-  const [cart, setCart] = useState(() => {
-    const saved = localStorage.getItem("cart");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [cart, setCart] = useState([]);
+  const syncTimeout = useRef(null);
 
-  // If user logs out → clear cart instantly
+  // Load cart from backend
   useEffect(() => {
-    if (!loggedIn) {
-      setCart([]);
-      localStorage.removeItem("cart");
-    }
+    const loadCart = async () => {
+      if (!loggedIn) {
+        setCart([]);
+        return;
+      }
+      try {
+        const token = getToken();
+        if (!token) return;
+
+        const res = await axios.get(`${API_URL}/api/cart`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setCart(res.data.items || []);
+      } catch (err) {
+        console.error("Failed to fetch cart:", err);
+        setCart([]);
+      }
+    };
+
+    loadCart();
   }, [loggedIn]);
 
-  // Persist cart
+  // Debounced backend sync
   useEffect(() => {
-    if (loggedIn) {
-      localStorage.setItem("cart", JSON.stringify(cart));
-    }
+    if (!loggedIn) return;
+    if (syncTimeout.current) clearTimeout(syncTimeout.current);
+
+    syncTimeout.current = setTimeout(async () => {
+      try {
+        const token = getToken();
+        if (!token) return;
+
+        await axios.post(
+          `${API_URL}/api/cart`,
+          { items: cart.map(({ _id, quantity }) => ({ productId: _id, quantity })) },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } catch (err) {
+        console.error("Failed to sync cart:", err);
+      }
+    }, 500);
+
+    return () => clearTimeout(syncTimeout.current);
   }, [cart, loggedIn]);
 
   const setCartItemQuantity = (product, quantity) => {
     if (!loggedIn) return;
-    setCart((prev) => {
-      const existing = prev.find((item) => item._id === product._id);
-      if (existing) {
-        return prev.map((item) =>
-          item._id === product._id ? { ...item, quantity } : item
-        );
-      }
-      return [...prev, { ...product, quantity }];
-    });
+    const existing = cart.find(item => item._id === product._id);
+    const newCart = existing
+      ? cart.map(item => (item._id === product._id ? { ...item, quantity } : item))
+      : [...cart, { ...product, quantity }];
+    setCart(newCart);
   };
 
   const updateCartQuantity = (productId, delta) => {
-    if (!loggedIn) return;
-    setCart((prev) =>
-      prev.map((item) =>
-        item._id === productId
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
+    const newCart = cart.map(item =>
+      item._id === productId ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item
     );
+    setCart(newCart);
   };
 
-  const removeFromCart = (productId) => {
-    if (!loggedIn) return;
-    setCart((prev) => prev.filter((item) => item._id !== productId));
-  };
-
-  const clearCart = () => {
-    setCart([]);
-    localStorage.removeItem("cart");
-  };
+  const removeFromCart = (productId) => setCart(cart.filter(item => item._id !== productId));
+  const clearCart = () => setCart([]);
 
   return (
     <CartContext.Provider
-      value={{
-        cart,
-        setCartItemQuantity,
-        updateCartQuantity,
-        removeFromCart,
-        clearCart,
-      }}
+      value={{ cart, setCartItemQuantity, updateCartQuantity, removeFromCart, clearCart }}
     >
       {children}
     </CartContext.Provider>

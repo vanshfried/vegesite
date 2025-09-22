@@ -7,7 +7,7 @@ import { isUserLoggedIn } from "../utils/auth";
 function ProductCard({ product }) {
   const [quantity, setQuantity] = useState(1);
   const { setCartItemQuantity } = useCart();
-  const [popup, setPopup] = useState({ message: "", type: "" }); // {message, type}
+  const [popup, setPopup] = useState({ message: "", type: "" });
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
@@ -16,9 +16,7 @@ function ProductCard({ product }) {
 
   const getImageUrl = (imagePath) =>
     imagePath
-      ? `${import.meta.env.VITE_API_URL}${
-          imagePath.startsWith("/uploads/") ? imagePath : `/uploads/${imagePath}`
-        }`
+      ? `${import.meta.env.VITE_API_URL}${imagePath.startsWith("/uploads/") ? imagePath : `/uploads/${imagePath}`}`
       : "";
 
   const handleAdd = () => {
@@ -37,7 +35,6 @@ function ProductCard({ product }) {
     setShowPopup(true);
   };
 
-  // Auto-close popup after 3s
   useEffect(() => {
     if (showPopup) {
       const timer = setTimeout(() => setShowPopup(false), 3000);
@@ -48,13 +45,11 @@ function ProductCard({ product }) {
   return (
     <div className={`product-card ${!product.stock ? "out-of-stock" : ""}`}>
       <h2 className="product-name">{product.name}</h2>
-
       {product.image ? (
         <img className="product-image" src={getImageUrl(product.image)} alt={product.name} />
       ) : (
         <div className="product-image placeholder">No Image</div>
       )}
-
       <p className="product-price">Price: ₹{product.price} / Kg</p>
 
       {product.stock ? (
@@ -68,15 +63,12 @@ function ProductCard({ product }) {
             onChange={(e) => setQuantity(e.target.value)}
           />
           <span>Kg</span>
-          <button className="buy-btn" onClick={handleAdd}>
-            Add to Cart
-          </button>
+          <button className="buy-btn" onClick={handleAdd}>Add to Cart</button>
         </div>
       ) : (
         <p className="out-of-stock">Out of Stock</p>
       )}
 
-      {/* Popup */}
       {showPopup && (
         <div className={`cart-popup ${popup.type}`}>
           <p>{popup.message}</p>

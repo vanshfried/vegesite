@@ -4,6 +4,7 @@ import ProductCard from "../components/ProductCard";
 import "../css/HomePage.css";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import { isUserLoggedIn } from "../utils/auth";
 
 function HomePage() {
   const [products, setProducts] = useState([]);
@@ -11,10 +12,10 @@ function HomePage() {
   const [error, setError] = useState(null);
   const { cart } = useCart();
   const navigate = useNavigate();
+  const loggedIn = isUserLoggedIn();
 
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_URL;
-
     const fetchProducts = async () => {
       try {
         const res = await axios.get(`${API_URL}/api/products`);
@@ -26,7 +27,6 @@ function HomePage() {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
@@ -47,7 +47,7 @@ function HomePage() {
         </div>
       )}
 
-      {cart.length > 0 && (
+      {loggedIn && cart.length > 0 && (
         <div className="cart-popup">
           <button onClick={() => navigate("/cart")}>
             Place Order ({cart.length} items)
