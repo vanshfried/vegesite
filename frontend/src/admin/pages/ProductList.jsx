@@ -10,13 +10,20 @@ function ProductList() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/products`
-        );
+        const token = localStorage.getItem("adminToken");
+        if (!token) {
+          setError("Unauthorized. Please login as admin.");
+          setLoading(false);
+          return;
+        }
+
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setProducts(res.data);
       } catch (err) {
         console.error("Failed to fetch products:", err);
-        setError("Failed to load products. Please try again later.");
+        setError(err.response?.data?.error || "Failed to load products.");
       } finally {
         setLoading(false);
       }
@@ -25,15 +32,20 @@ function ProductList() {
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?"))
-      return;
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
 
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${id}`);
-      setProducts((prev) => prev.filter((p) => p._id !== id));
+      const token = localStorage.getItem("adminToken");
+      if (!token) return alert("Unauthorized. Please login as admin.");
+
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setProducts(prev => prev.filter(p => p._id !== id));
     } catch (err) {
       console.error("Failed to delete product:", err);
-      alert("Failed to delete product. Please try again.");
+      alert(err.response?.data?.error || "Failed to delete product.");
     }
   };
 
@@ -47,29 +59,13 @@ function ProductList() {
         <p>No products available.</p>
       ) : (
         <div className="product-list-grid">
-          {products.map((product) => (
+          {products.map(product => (
             <div key={product._id} className="product-item">
-              <img
-                src={
-                  product.image
-                    ? `${import.meta.env.VITE_API_URL}${product.image}`
-                    : ""
-                }
-                alt={product.name}
-              />
-
+              <img src={product.image ? `${import.meta.env.VITE_API_URL}${product.image}` : ""} alt={product.name} />
               <h3>{product.name}</h3>
               <p>Price: ₹{product.price}</p>
               <p>{product.stock ? "In Stock" : "Out of Stock"}</p>
-              {/* Delete button shown here, separate from ProductCard */}
-              <button
-                onClick={() => handleDelete(product._id)}
-                style={{
-                  backgroundColor: "red",
-                  color: "#fff",
-                  marginTop: "5px",
-                }}
-              >
+              <button onClick={() => handleDelete(product._id)} style={{ backgroundColor: "red", color: "#fff", marginTop: "5px" }}>
                 Delete
               </button>
             </div>

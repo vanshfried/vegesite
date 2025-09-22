@@ -3,31 +3,20 @@ import axios from "axios";
 import "../../css/AddProduct.css";
 
 function AddProduct() {
-  const [formData, setFormData] = useState({
-    name: "",
-    price: "",
-    stock: true,
-  });
+  const [formData, setFormData] = useState({ name: "", price: "", stock: true });
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-
-  const fileInputRef = useRef(null); // ref for file input
+  const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    setFormData(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      alert("Please select a valid image file.");
-      return;
-    }
+    if (!file.type.startsWith("image/")) return alert("Please select a valid image file.");
 
     setImage(file);
     if (preview) URL.revokeObjectURL(preview);
@@ -35,25 +24,20 @@ function AddProduct() {
   };
 
   useEffect(() => {
-    return () => {
-      if (preview) URL.revokeObjectURL(preview);
-    };
+    return () => { if (preview) URL.revokeObjectURL(preview); };
   }, [preview]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.price) {
-      alert("Name and price are required.");
-      return;
-    }
 
+    if (!formData.name || !formData.price) return alert("Name and price are required.");
     const priceNum = parseFloat(formData.price);
-    if (isNaN(priceNum) || priceNum < 0) {
-      alert("Price must be a non-negative number.");
-      return;
-    }
+    if (isNaN(priceNum) || priceNum < 0) return alert("Price must be a non-negative number.");
 
     try {
+      const token = localStorage.getItem("adminToken");
+      if (!token) return alert("Unauthorized. Please login as admin.");
+
       const data = new FormData();
       data.append("name", formData.name);
       data.append("price", priceNum);
@@ -61,75 +45,37 @@ function AddProduct() {
       if (image) data.append("image", image);
 
       await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, data, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`, // send JWT
+        },
       });
 
       alert("Product added successfully!");
-      // Reset form fields
       setFormData({ name: "", price: "", stock: true });
       setImage(null);
       setPreview(null);
-
-      // Reset file input element
-      if (fileInputRef.current) {
-        fileInputRef.current.value = null;
-      }
+      if (fileInputRef.current) fileInputRef.current.value = null;
     } catch (err) {
       console.error(err);
-      alert("Failed to add product.");
+      alert(err.response?.data?.error || "Failed to add product.");
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Name input */}
-      <input
-        name="name"
-        placeholder="Product Name"
-        value={formData.name}
-        onChange={handleChange}
-        required
-      />
-
-      {/* Price input */}
-      <input
-        name="price"
-        type="number"
-        min="0"
-        step="1"
-        placeholder="Price (₹)"
-        value={formData.price}
-        onChange={handleChange}
-        required
-      />
-
-      {/* Stock checkbox */}
+      <input name="name" placeholder="Product Name" value={formData.name} onChange={handleChange} required />
+      <input name="price" type="number" min="0" step="1" placeholder="Price (₹)" value={formData.price} onChange={handleChange} required />
       <label>
-        <input
-          type="checkbox"
-          name="stock"
-          checked={formData.stock}
-          onChange={handleChange}
-        />
-        In Stock
+        <input type="checkbox" name="stock" checked={formData.stock} onChange={handleChange} /> In Stock
       </label>
 
-      {/* Image input & preview */}
       <div className="image-container">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          ref={fileInputRef} // attach ref here
-          required
-        />
+        <input type="file" accept="image/*" onChange={handleImageChange} ref={fileInputRef} required />
         {preview && <img src={preview} alt="Preview" />}
       </div>
 
-      {/* Submit button */}
-      <button type="submit" disabled={!formData.name || !formData.price || !image}>
-        Add Product
-      </button>
+      <button type="submit" disabled={!formData.name || !formData.price || !image}>Add Product</button>
     </form>
   );
 }

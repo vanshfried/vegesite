@@ -122,6 +122,13 @@
   margin: 0;
   word-wrap: break-word; /* avoid overflow */
 }
+.product-card .cart-popup.login {
+  background: #e74c3c; /* red for login */
+}
+
+.product-card .cart-popup.cart {
+  background: #27ae60; /* green for success */
+}
 
 
 @keyframes fadeIn {

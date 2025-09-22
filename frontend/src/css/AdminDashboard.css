@@ -1,0 +1,49 @@
+.admin-dashboard {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.admin-dashboard h2 {
+  margin-bottom: 20px;
+}
+
+.admin-dashboard ul {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-dashboard ul li {
+  margin: 10px 0;
+}
+
+.admin-dashboard ul li a {
+  text-decoration: none;
+  color: #3ca55c;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.admin-dashboard ul li a:hover {
+  color: #f39c12;
+}
+
+.admin-dashboard button {
+  background-color: #d82525;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.admin-dashboard button:hover {
+  background-color: #a61f1f;
+}

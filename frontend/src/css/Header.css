@@ -1,10 +1,11 @@
+/* Header container */
 .user-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 50px;
+  padding: 15px 20px;
   background-color: #3ca55c; /* leafy green */
-  color: #fffbe6; /* soft cream for contrast */
+  color: #fffbe6; /* soft cream */
   box-shadow: 0 3px 8px rgba(0,0,0,0.2);
   position: sticky;
   top: 0;
@@ -12,19 +13,23 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Logo */
 .logo h1 {
   margin: 0;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: bold;
   letter-spacing: 1px;
   color: #fffbe6;
 }
 
+/* Nav links container */
 .nav-links {
   display: flex;
-  gap: 25px;
+  gap: 20px;
+  align-items: center;
 }
 
+/* Nav link styling */
 .nav-links a {
   color: #fffbe6;
   text-decoration: none;
@@ -38,6 +43,24 @@
 .nav-links a:hover {
   background-color: #f39c12; /* carrot-orange hover */
   color: #fff;
+}
+
+/* Login / Logout button */
+.nav-links .logout-btn {
+  background-color: #d82525;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  text-align: center;
+}
+
+.nav-links .logout-btn:hover {
+  background-color: #a61f1f;
 }
 
 /* Hamburger menu */
@@ -68,7 +91,7 @@
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* Mobile responsive */
+/* Mobile nav */
 @media (max-width: 768px) {
   .hamburger {
     display: flex;
@@ -76,24 +99,29 @@
 
   .nav-links {
     position: absolute;
-    top: -300px; /* hidden above initially */
+    top: 60px; /* directly under header */
     left: 0;
     width: 100%;
-    background: #3ca55c; /* same green as header */
+    background: #3ca55c;
     flex-direction: column;
-    transition: top 0.3s ease;
-    padding: 20px 0;
+    gap: 10px;
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+    max-height: 0; /* initially hidden */
+    padding: 0;
     text-align: center;
   }
 
   .nav-links.open {
-    top: 60px; /* slide down below header */
+    max-height: 500px; /* enough to show all links including logout */
+    padding: 20px 0;
   }
 
-  .nav-links a {
-    padding: 12px 0;
+  .nav-links a, .nav-links .logout-btn {
+    width: 80%;
+    margin: 5px auto;
     font-size: 16px;
-    width: 100%;
+    padding: 10px 0;
   }
 }
 
@@ -103,7 +131,7 @@
     font-size: 20px;
   }
 
-  .nav-links a {
+  .nav-links a, .nav-links .logout-btn {
     font-size: 14px;
     padding: 10px 0;
   }

@@ -1,5 +1,6 @@
 const Admin = require("../models/Admin");
 const bcrypt = require("bcryptjs");
+const generateToken = require("../utils/generateToken");
 
 exports.registerAdmin = async (req, res) => {
   try {
@@ -14,7 +15,11 @@ exports.registerAdmin = async (req, res) => {
 
     const admin = await Admin.create({ name, email, passwordHash });
 
-    res.json({ message: "Admin registered", admin });
+    res.json({ 
+      message: "Admin registered", 
+      admin,
+      token: generateToken(admin._id, admin.role), // issue JWT right away
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to register admin" });
@@ -33,7 +38,7 @@ exports.loginAdmin = async (req, res) => {
     res.json({
       message: "Login successful",
       admin,
-      token: "dummy-jwt-for-now",
+      token: generateToken(admin._id, admin.role), // ✅ real JWT now
     });
   } catch (err) {
     console.error(err);

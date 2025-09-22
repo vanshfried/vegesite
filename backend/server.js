@@ -29,6 +29,10 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/auth/user", require("./routes/userAuthRoutes"));
 app.use("/auth/admin", require("./routes/adminAuthRoutes"));
 
+// 🔹 Protected routes
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/admin", require("./routes/adminRoutes"));
+
 // DB connection
 mongoose
   .connect(process.env.MONGO_URI, {

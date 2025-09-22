@@ -1,0 +1,74 @@
+/* src/css/UserLogin.css */
+
+.user-login {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 25px 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.user-login h2 {
+  text-align: center;
+  color: #3ca55c;
+  margin-bottom: 15px;
+}
+
+.user-login input {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.user-login input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 6px rgba(74,144,226,0.3);
+  outline: none;
+}
+
+.user-login button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3ca55c;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.user-login button:hover {
+  background-color: #2e8b4d;
+  transform: translateY(-1px);
+}
+
+/* OTP test display */
+.user-login p {
+  text-align: center;
+  font-size: 14px;
+  color: #d82525;
+  margin: 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .user-login {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .user-login input,
+  .user-login button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
