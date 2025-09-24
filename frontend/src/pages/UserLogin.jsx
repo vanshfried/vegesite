@@ -1,141 +1,124 @@
-import { useState, useEffect, useRef } from "react";
+// src/pages/UserLogin.jsx
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import "../css/AddProduct.css";
+import { useNavigate } from "react-router-dom";
+import "../css/UserLogin.css";
 
-function AddProduct() {
-  const [formData, setFormData] = useState({ name: "", price: "", stock: true });
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [message, setMessage] = useState(null);
-  const [isError, setIsError] = useState(false);
-  const fileInputRef = useRef(null);
+export default function UserLogin() {
+  const [mobile, setMobile] = useState("");
+  const [otp, setOtp] = useState(new Array(6).fill("")); // 6-digit OTP
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const otpRefs = useRef([]);
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+  const handleMobileChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    if (value.length <= 10) setMobile(value);
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      setIsError(true);
-      setMessage("Please select a valid image file.");
+  const sendOtp = async () => {
+    if (mobile.length !== 10) {
+      setMessage("Enter a valid 10-digit mobile number");
       return;
     }
+    try {
+      setLoading(true);
+      setMessage("");
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/user/send-otp`,
+        { mobile: "+91" + mobile }
+      );
+      setMessage("OTP sent successfully!");
+      setStep(2);
+      if (res.data.otp) console.log("DEV OTP:", res.data.otp);
+    } catch (err) {
+      console.error(err);
+      setMessage(err.response?.data?.error || "Failed to send OTP");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    setImage(file);
-    if (preview) URL.revokeObjectURL(preview);
-    setPreview(URL.createObjectURL(file));
+  const handleOtpChange = (index, value) => {
+    if (!/^\d?$/.test(value)) return; // only digits, max 1 char
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value && index < 5) otpRefs.current[index + 1].focus();
+    if (!value && index > 0) otpRefs.current[index - 1].focus();
+  };
+
+  const verifyOtp = async () => {
+    const otpStr = otp.join("");
+    if (otpStr.length < 6) {
+      setMessage("Enter the complete 6-digit OTP");
+      return;
+    }
+    try {
+      setLoading(true);
+      setMessage("");
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/user/verify-otp`,
+        { mobile: "+91" + mobile, otp: otpStr }
+      );
+      localStorage.setItem("userToken", res.data.token);
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      setMessage(err.response?.data?.error || "OTP verification failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    return () => {
-      if (preview) URL.revokeObjectURL(preview);
-    };
-  }, [preview]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage(null);
-
-    if (!formData.name || !formData.price) {
-      setIsError(true);
-      setMessage("Name and price are required.");
-      return;
-    }
-
-    const priceNum = parseFloat(formData.price);
-    if (isNaN(priceNum) || priceNum < 0) {
-      setIsError(true);
-      setMessage("Price must be a non-negative number.");
-      return;
-    }
-
-    try {
-      const token = localStorage.getItem("adminToken");
-      if (!token) {
-        setIsError(true);
-        setMessage("Unauthorized. Please login as admin.");
-        return;
-      }
-
-      const data = new FormData();
-      data.append("name", formData.name);
-      data.append("price", priceNum);
-      data.append("stock", formData.stock ? "true" : "false");
-      if (image) data.append("image", image);
-
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, // send JWT
-        },
-      });
-
-      setIsError(false);
-      setMessage("✅ Product added successfully!");
-      setFormData({ name: "", price: "", stock: true });
-      setImage(null);
-      setPreview(null);
-      if (fileInputRef.current) fileInputRef.current.value = null;
-    } catch (err) {
-      console.error(err);
-      setIsError(true);
-      setMessage(err.response?.data?.error || "Failed to add product.");
-    }
-  };
+    if (step === 2 && otpRefs.current[0]) otpRefs.current[0].focus();
+  }, [step]);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        name="name"
-        placeholder="Product Name"
-        value={formData.name}
-        onChange={handleChange}
-        required
-      />
-      <input
-        name="price"
-        type="number"
-        min="0"
-        step="1"
-        placeholder="Price (₹)"
-        value={formData.price}
-        onChange={handleChange}
-        required
-      />
-      <label>
-        <input
-          type="checkbox"
-          name="stock"
-          checked={formData.stock}
-          onChange={handleChange}
-        />{" "}
-        In Stock
-      </label>
+    <div className="user-login">
+      <h2>User OTP Login</h2>
+      {message && <p className="inline-message">{message}</p>}
 
-      <div className="image-container">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          ref={fileInputRef}
-          required
-        />
-        {preview && <img src={preview} alt="Preview" />}
-      </div>
-
-      <button type="submit" disabled={!formData.name || !formData.price || !image}>
-        Add Product
-      </button>
-
-      {message && (
-        <p className={`form-message ${isError ? "error" : "success"}`}>{message}</p>
+      {step === 1 && (
+        <>
+          <div className="mobile-input-wrapper">
+            <span className="prefix">+91</span>
+            <input
+              type="text"
+              placeholder="Mobile number"
+              value={mobile}
+              onChange={handleMobileChange}
+            />
+          </div>
+          <button onClick={sendOtp} disabled={loading}>
+            {loading ? "Sending..." : "Send OTP"}
+          </button>
+        </>
       )}
-    </form>
+
+      {step === 2 && (
+        <>
+          <div className="otp-container">
+            {otp.map((digit, index) => (
+              <input
+                key={index}
+                type="text"
+                maxLength="1"
+                value={digit}
+                ref={(el) => (otpRefs.current[index] = el)}
+                onChange={(e) => handleOtpChange(index, e.target.value)}
+              />
+            ))}
+          </div>
+          <button onClick={verifyOtp} disabled={loading}>
+            {loading ? "Verifying..." : "Verify OTP"}
+          </button>
+        </>
+      )}
+    </div>
   );
 }
-
-export default AddProduct;
