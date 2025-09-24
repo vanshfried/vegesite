@@ -1,131 +1,141 @@
-// src/pages/UserLogin.jsx
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import "../css/AddProduct.css";
 
-export default function UserLogin() {
-  const [mobile, setMobile] = useState("");
-  const [otp, setOtp] = useState("");
-  const [step, setStep] = useState(1); // 1: enter mobile, 2: enter OTP
-  const [testingOtp, setTestingOtp] = useState(""); // show OTP in alert for testing
-  const navigate = useNavigate();
+function AddProduct() {
+  const [formData, setFormData] = useState({ name: "", price: "", stock: true });
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [message, setMessage] = useState(null);
+  const [isError, setIsError] = useState(false);
+  const fileInputRef = useRef(null);
 
-  // Step 1: Send OTP
-  const sendOtp = async () => {
-    if (!mobile) return alert("Please enter your mobile number");
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/user/send-otp`,
-        { mobile: mobile.toString() }
-      );
-
-      // Show OTP for testing only
-      if (res.data.otp) {
-        alert(`OTP for testing: ${res.data.otp}`);
-        setTestingOtp(res.data.otp);
-      } else {
-        alert("OTP sent! Check console if using mock SMS.");
-      }
-
-      setStep(2);
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.error || "Failed to send OTP");
-    }
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
-  // Step 2: Verify OTP
-  const verifyOtp = async () => {
-    if (!otp) return alert("Please enter the OTP");
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setIsError(true);
+      setMessage("Please select a valid image file.");
+      return;
+    }
+
+    setImage(file);
+    if (preview) URL.revokeObjectURL(preview);
+    setPreview(URL.createObjectURL(file));
+  };
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage(null);
+
+    if (!formData.name || !formData.price) {
+      setIsError(true);
+      setMessage("Name and price are required.");
+      return;
+    }
+
+    const priceNum = parseFloat(formData.price);
+    if (isNaN(priceNum) || priceNum < 0) {
+      setIsError(true);
+      setMessage("Price must be a non-negative number.");
+      return;
+    }
+
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/user/verify-otp`,
-        { mobile: mobile.toString(), otp: otp.toString() }
-      );
-      localStorage.setItem("userToken", res.data.token);
-      navigate("/");
+      const token = localStorage.getItem("adminToken");
+      if (!token) {
+        setIsError(true);
+        setMessage("Unauthorized. Please login as admin.");
+        return;
+      }
+
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("price", priceNum);
+      data.append("stock", formData.stock ? "true" : "false");
+      if (image) data.append("image", image);
+
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`, // send JWT
+        },
+      });
+
+      setIsError(false);
+      setMessage("✅ Product added successfully!");
+      setFormData({ name: "", price: "", stock: true });
+      setImage(null);
+      setPreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = null;
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.error || "OTP verification failed");
+      setIsError(true);
+      setMessage(err.response?.data?.error || "Failed to add product.");
     }
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "400px",
-        margin: "50px auto",
-        textAlign: "center",
-        padding: "20px",
-        border: "1px solid #ccc",
-        borderRadius: "10px",
-      }}
-    >
-      <h2>User OTP Login</h2>
+    <form onSubmit={handleSubmit}>
+      <input
+        name="name"
+        placeholder="Product Name"
+        value={formData.name}
+        onChange={handleChange}
+        required
+      />
+      <input
+        name="price"
+        type="number"
+        min="0"
+        step="1"
+        placeholder="Price (₹)"
+        value={formData.price}
+        onChange={handleChange}
+        required
+      />
+      <label>
+        <input
+          type="checkbox"
+          name="stock"
+          checked={formData.stock}
+          onChange={handleChange}
+        />{" "}
+        In Stock
+      </label>
 
-      {step === 1 && (
-        <>
-          <input
-            type="tel"
-            placeholder="Mobile number"
-            value={mobile}
-            onChange={(e) => setMobile(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "10px",
-              borderRadius: "6px",
-              border: "1px solid #ccc",
-            }}
-          />
-          <button
-            onClick={sendOtp}
-            style={{
-              width: "100%",
-              padding: "12px",
-              borderRadius: "6px",
-              backgroundColor: "#4a90e2",
-              color: "#fff",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Send OTP
-          </button>
-        </>
-      )}
+      <div className="image-container">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          ref={fileInputRef}
+          required
+        />
+        {preview && <img src={preview} alt="Preview" />}
+      </div>
 
-      {step === 2 && (
-        <>
-          <input
-            type="number"
-            placeholder="Enter OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "10px",
-              borderRadius: "6px",
-              border: "1px solid #ccc",
-            }}
-          />
-          <button
-            onClick={verifyOtp}
-            style={{
-              width: "100%",
-              padding: "12px",
-              borderRadius: "6px",
-              backgroundColor: "#4a90e2",
-              color: "#fff",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Verify OTP
-          </button>
-        </>
+      <button type="submit" disabled={!formData.name || !formData.price || !image}>
+        Add Product
+      </button>
+
+      {message && (
+        <p className={`form-message ${isError ? "error" : "success"}`}>{message}</p>
       )}
-    </div>
+    </form>
   );
 }
+
+export default AddProduct;

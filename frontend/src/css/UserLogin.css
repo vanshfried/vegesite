@@ -1,5 +1,3 @@
-/* src/css/UserLogin.css */
-
 .user-login {
   max-width: 400px;
   margin: 50px auto;
@@ -35,6 +33,23 @@
   outline: none;
 }
 
+.mobile-input-wrapper {
+  position: relative;
+}
+
+.mobile-input-wrapper .prefix {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #666;
+  font-weight: 500;
+}
+
+.mobile-input-wrapper input {
+  padding-left: 40px; /* space for +91 prefix */
+}
+
 .user-login button {
   padding: 12px;
   border: none;
@@ -51,15 +66,37 @@
   transform: translateY(-1px);
 }
 
-/* OTP test display */
-.user-login p {
+.user-login .inline-message {
   text-align: center;
   font-size: 14px;
   color: #d82525;
   margin: 0;
+  min-height: 20px;
+}
+/* OTP input boxes */
+.otp-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 10px 0;
 }
 
-/* Mobile responsive */
+.otp-container input {
+  width: 40px;
+  height: 50px;
+  font-size: 20px;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.otp-container input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 6px rgba(74,144,226,0.3);
+  outline: none;
+}
+
 @media (max-width: 480px) {
   .user-login {
     margin: 20px;

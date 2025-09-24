@@ -1,55 +1,59 @@
+// controllers/userAuthController.js
 const User = require("../models/User");
-const Otp = require("../models/Otp");
 const generateToken = require("../utils/generateToken");
 
-// TEST mode: show OTP in response for now
-const sendOtpToMobile = async (mobile, otp) => {
-  console.log(`OTP for ${mobile}: ${otp}`);
-};
+// Dev mode flag: true if NODE_ENV not set to "production"
+const DEV_MODE = process.env.NODE_ENV !== "production";
 
+// Send OTP
 exports.sendOtp = async (req, res) => {
   try {
     const { mobile } = req.body;
     if (!mobile) return res.status(400).json({ error: "Mobile required" });
 
-    const otp = "" + Math.floor(1000 + Math.random() * 9000);
+    const formattedMobile = mobile.startsWith("+") ? mobile : "+91" + mobile;
 
-    await Otp.create({
-      mobile,
-      otp,
-      expiresAt: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
-    });
+    // Generate 6-digit OTP
+    const otp = "" + Math.floor(100000 + Math.random() * 900000);
 
-    await sendOtpToMobile(mobile, otp);
+    if (DEV_MODE) {
+      // Log OTP for development; skip real SMS
+      console.log(`DEV OTP for ${formattedMobile}: ${otp}`);
+      return res.json({ message: "OTP sent (dev mode)", otp });
+    }
 
-    // ✅ send OTP in response for testing
-    res.json({ message: "OTP sent successfully", otp });
+    // TODO: Add Twilio or any SMS provider here for production
+    // For now, we just respond with OTP (production testing requires real SMS setup)
+    return res.json({ message: "OTP would be sent here in production" });
+
   } catch (err) {
-    console.error(err);
+    console.error("Send OTP error:", err);
     res.status(500).json({ error: "Failed to send OTP" });
   }
 };
 
+// Verify OTP
 exports.verifyOtp = async (req, res) => {
   try {
     const { mobile, otp } = req.body;
-    if (!mobile || !otp)
-      return res.status(400).json({ error: "Missing fields" });
+    if (!mobile || !otp) return res.status(400).json({ error: "Missing fields" });
 
-    const otpDoc = await Otp.findOne({ mobile, otp });
-    if (!otpDoc)
-      return res.status(400).json({ error: "Invalid or expired OTP" });
+    const formattedMobile = mobile.startsWith("+") ? mobile : "+91" + mobile;
 
-    if (otpDoc.expiresAt < new Date()) {
-      await Otp.deleteMany({ mobile });
-      return res.status(400).json({ error: "OTP expired" });
+    if (DEV_MODE) {
+      console.log(`DEV VERIFY OTP for ${formattedMobile}: ${otp}`);
+      // Accept any 6-digit OTP in dev mode
+      if (!/^\d{6}$/.test(otp)) {
+        return res.status(400).json({ error: "OTP must be 6 digits" });
+      }
+    } else {
+      // TODO: Verify via Twilio or SMS provider in production
     }
 
-    await Otp.deleteMany({ mobile });
-
-    let user = await User.findOne({ mobile });
+    // Find or create user
+    let user = await User.findOne({ mobile: formattedMobile });
     if (!user) {
-      user = await User.create({ mobile });
+      user = await User.create({ mobile: formattedMobile });
     }
 
     res.json({
@@ -58,7 +62,7 @@ exports.verifyOtp = async (req, res) => {
       token: generateToken(user._id, user.role),
     });
   } catch (err) {
-    console.error(err);
+    console.error("Verify OTP error:", err);
     res.status(500).json({ error: "Failed to verify OTP" });
   }
 };

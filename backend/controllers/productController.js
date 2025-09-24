@@ -53,3 +53,38 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+// Update a product by ID
+exports.updateProduct = async (req, res) => {
+  try {
+    const { price, stock } = req.body;
+
+    // Validate price if provided
+    if (price !== undefined) {
+      const priceNum = parseFloat(price);
+      if (isNaN(priceNum) || priceNum < 0) {
+        return res.status(400).json({ error: 'Invalid price' });
+      }
+      req.body.price = priceNum;
+    }
+
+    // Validate stock if provided
+    if (stock !== undefined) {
+      req.body.stock = stock === true || stock === 'true';
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.status(200).json(updatedProduct);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};

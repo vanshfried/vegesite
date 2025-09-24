@@ -6,6 +6,7 @@ function AddProduct() {
   const [formData, setFormData] = useState({ name: "", price: "", stock: true });
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [message, setMessage] = useState(null); // ✅ success/error messages
   const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
@@ -16,7 +17,10 @@ function AddProduct() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (!file.type.startsWith("image/")) return alert("Please select a valid image file.");
+    if (!file.type.startsWith("image/")) {
+      setMessage({ type: "error", text: "Please select a valid image file." });
+      return;
+    }
 
     setImage(file);
     if (preview) URL.revokeObjectURL(preview);
@@ -30,13 +34,23 @@ function AddProduct() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.price) return alert("Name and price are required.");
+    if (!formData.name || !formData.price) {
+      setMessage({ type: "error", text: "Name and price are required." });
+      return;
+    }
+
     const priceNum = parseFloat(formData.price);
-    if (isNaN(priceNum) || priceNum < 0) return alert("Price must be a non-negative number.");
+    if (isNaN(priceNum) || priceNum < 0) {
+      setMessage({ type: "error", text: "Price must be a non-negative number." });
+      return;
+    }
 
     try {
       const token = localStorage.getItem("adminToken");
-      if (!token) return alert("Unauthorized. Please login as admin.");
+      if (!token) {
+        setMessage({ type: "error", text: "Unauthorized. Please login as admin." });
+        return;
+      }
 
       const data = new FormData();
       data.append("name", formData.name);
@@ -47,25 +61,33 @@ function AddProduct() {
       await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, // send JWT
+          Authorization: `Bearer ${token}`,
         },
       });
 
-      alert("Product added successfully!");
+      setMessage({ type: "success", text: "Product added successfully!" });
       setFormData({ name: "", price: "", stock: true });
       setImage(null);
       setPreview(null);
       if (fileInputRef.current) fileInputRef.current.value = null;
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.error || "Failed to add product.");
+      setMessage({ type: "error", text: err.response?.data?.error || "Failed to add product." });
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* ✅ Message box */}
+      {message && (
+        <div className={`message ${message.type}`}>
+          {message.text}
+        </div>
+      )}
+
       <input name="name" placeholder="Product Name" value={formData.name} onChange={handleChange} required />
       <input name="price" type="number" min="0" step="1" placeholder="Price (₹)" value={formData.price} onChange={handleChange} required />
+
       <label>
         <input type="checkbox" name="stock" checked={formData.stock} onChange={handleChange} /> In Stock
       </label>

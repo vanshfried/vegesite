@@ -2,14 +2,18 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../../css/AdminLogin.css"
+import "../../css/AdminLogin.css";
+
 function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState(null);
+  const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage(null);
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/admin/login`,
@@ -19,11 +23,13 @@ function AdminLogin() {
       // Save JWT in localStorage
       localStorage.setItem("adminToken", res.data.token);
 
-      alert("Login successful");
-      navigate("/admin/products"); // redirect to admin dashboard
+      setIsError(false);
+      setMessage("Login successful! Redirecting...");
+      setTimeout(() => navigate("/admin/products"), 1000); // redirect after short delay
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.error || "Login failed");
+      setIsError(true);
+      setMessage(err.response?.data?.error || "Login failed. Try again.");
     }
   };
 
@@ -46,6 +52,12 @@ function AdminLogin() {
           required
         />
         <button type="submit">Login</button>
+
+        {message && (
+          <p className={`login-message ${isError ? "error" : "success"}`}>
+            {message}
+          </p>
+        )}
       </form>
     </div>
   );

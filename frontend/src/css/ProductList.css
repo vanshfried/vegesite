@@ -17,6 +17,7 @@
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
   justify-items: center;
+  align-items: flex-start; /* Aligns cards to the top to prevent vertical shifting */
 }
 
 .product-item {
@@ -27,7 +28,13 @@
   width: 100%;
   max-width: 250px;
   text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 220px;
+  transition: all 0.3s ease;
+  position: relative; /* Allows for absolute positioning of the expanded content */
+  z-index: 1; /* Ensures the expanded card is on top of others */
 }
 
 .product-item:hover {
@@ -55,17 +62,171 @@
   color: #555;
 }
 
-.product-item button {
+.product-actions {
+  display: flex;
+  justify-content: space-between;
   margin-top: 10px;
+}
+
+.product-actions button {
+  flex: 1;
+  margin: 0 2px;
   padding: 8px 12px;
-  background-color: #d82525;
-  color: #fff;
-  border: none;
   border-radius: 5px;
+  border: none;
   cursor: pointer;
+  font-size: 0.9rem;
   transition: background-color 0.2s;
 }
 
-.product-item button:hover {
+.product-actions button:first-child {
+  background-color: #4a90e2;
+  color: #fff;
+}
+
+.product-actions button:first-child:hover {
+  background-color: #357abd;
+}
+
+.product-actions button:last-child {
+  background-color: #d82525;
+  color: #fff;
+}
+
+.product-actions button:last-child:hover {
   background-color: #a71b1b;
+}
+
+.product-item input[type="number"],
+.product-item select {
+  width: 100%;
+  padding: 6px 8px;
+  margin: 6px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.product-item input[type="number"]:focus,
+.product-item select:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 3px rgba(74, 144, 226, 0.5);
+  outline: none;
+}
+
+.confirm-inline {
+  width: 100%;
+  padding-top: 10px;
+}
+
+.confirm-inline p {
+  margin: 8px 0;
+  font-size: 0.95rem;
+  color: #d82525;
+  font-weight: 500;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.confirm-buttons button {
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.confirm-buttons .confirm-yes {
+  background-color: #d82525;
+  color: #fff;
+}
+
+.confirm-buttons .confirm-yes:hover {
+  background-color: #a71b1b;
+}
+
+.confirm-buttons .confirm-no {
+  background-color: #ccc;
+  color: #333;
+}
+
+.confirm-buttons .confirm-no:hover {
+  background-color: #999;
+}
+
+.message {
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.message.success {
+  background-color: #e6f9ed;
+  color: #207245;
+  border: 1px solid #b7e1c5;
+}
+
+.message.error {
+  background-color: #fdecea;
+  color: #a94442;
+  border: 1px solid #f5c6cb;
+}
+
+.expandable-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+}
+
+.product-item.expanded .expandable-content {
+  max-height: 400px;
+  opacity: 1;
+  padding-top: 10px;
+}
+
+@media (max-width: 500px) {
+  .product-list-page {
+    padding: 20px;
+  }
+
+  .product-list-grid {
+    gap: 15px;
+  }
+
+  .product-item {
+    max-width: 100%;
+  }
+
+  .product-item img {
+    height: 150px;
+  }
+
+  .product-item h3 {
+    font-size: 1rem;
+  }
+
+  .product-item p {
+    font-size: 0.9rem;
+  }
+
+  .product-item > button,
+  .confirm-buttons button,
+  .product-actions button {
+    font-size: 0.85rem;
+    padding: 5px 8px;
+  }
 }

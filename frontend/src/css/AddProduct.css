@@ -104,6 +104,33 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* Success & error messages */
+.message {
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.message.success {
+  background-color: #e6f9ed;
+  color: #207245;
+  border: 1px solid #b7e1c5;
+}
+
+.message.error {
+  background-color: #fdecea;
+  color: #a94442;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Responsive adjustments */
 @media (max-width: 500px) {
   form {
