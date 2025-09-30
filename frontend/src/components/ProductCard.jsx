@@ -19,6 +19,14 @@ function ProductCard({ product }) {
       ? `${import.meta.env.VITE_API_URL}${imagePath.startsWith("/uploads/") ? imagePath : `/uploads/${imagePath}`}`
       : "";
 
+  const handleQuantityChange = (e) => {
+    let val = parseFloat(e.target.value);
+    if (isNaN(val)) val = MIN_QTY;
+    if (val > MAX_QTY) val = MAX_QTY;
+    if (val < MIN_QTY) val = MIN_QTY;
+    setQuantity(val);
+  };
+
   const handleAdd = () => {
     if (!isUserLoggedIn()) {
       setPopup({ message: "Please login to add items to cart.", type: "login" });
@@ -37,7 +45,7 @@ function ProductCard({ product }) {
 
   useEffect(() => {
     if (showPopup) {
-      const timer = setTimeout(() => setShowPopup(false), 3000);
+      const timer = setTimeout(() => setShowPopup(false), 2500);
       return () => clearTimeout(timer);
     }
   }, [showPopup]);
@@ -45,12 +53,14 @@ function ProductCard({ product }) {
   return (
     <div className={`product-card ${!product.stock ? "out-of-stock" : ""}`}>
       <h2 className="product-name">{product.name}</h2>
+
       {product.image ? (
         <img className="product-image" src={getImageUrl(product.image)} alt={product.name} />
       ) : (
         <div className="product-image placeholder">No Image</div>
       )}
-      <p className="product-price">Price: ₹{product.price} / Kg</p>
+
+      <p className="product-price">₹{product.price} / Kg</p>
 
       {product.stock ? (
         <div className="buy-section">
@@ -58,12 +68,14 @@ function ProductCard({ product }) {
             type="number"
             min={MIN_QTY}
             max={MAX_QTY}
-            step={0.5}
+            step={0.25}
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={handleQuantityChange}
           />
           <span>Kg</span>
-          <button className="buy-btn" onClick={handleAdd}>Add to Cart</button>
+          <button className="buy-btn" onClick={handleAdd}>
+            Add to Cart
+          </button>
         </div>
       ) : (
         <p className="out-of-stock">Out of Stock</p>
@@ -73,7 +85,7 @@ function ProductCard({ product }) {
         <div className={`cart-popup ${popup.type}`}>
           <p>{popup.message}</p>
           {popup.type === "cart" && <button onClick={() => navigate("/cart")}>Go to Cart</button>}
-          {popup.type === "login" && <button onClick={() => navigate("/login")}>Go to Login</button>}
+          {popup.type === "login" && <button onClick={() => navigate("/login")}>Login</button>}
         </div>
       )}
     </div>

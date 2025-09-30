@@ -35,7 +35,7 @@ function HomePage() {
 
   return (
     <div className="home-page">
-      <h1>Products</h1>
+      <h1>Fresh Vegetables</h1>
 
       {products.length === 0 ? (
         <p>No products available at the moment.</p>
@@ -48,9 +48,9 @@ function HomePage() {
       )}
 
       {loggedIn && cart.length > 0 && (
-        <div className="cart-popup">
+        <div className="cart-popup sticky-popup">
           <button onClick={() => navigate("/cart")}>
-            Place Order ({cart.length} items)
+            Go to Cart ({cart.length} item{cart.length > 1 ? "s" : ""})
           </button>
         </div>
       )}

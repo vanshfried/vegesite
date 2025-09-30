@@ -4,8 +4,8 @@ import AddProduct from "./admin/pages/AddProduct";
 import ProductList from "./admin/pages/ProductList";
 import Header from "./components/Header";
 import About from "./pages/About";
-import PrevOrders from "./pages/PrevOrder";
 import CartPage from "./pages/CartPage";
+import OrdersPage from "./pages/OrdersPage"; // <-- added
 import AdminLogin from "./admin/pages/AdminLogin";
 import AdminRoute from "./admin/components/AdminRoute";
 import AdminDashboard from "./admin/pages/AdminDashboard";
@@ -24,9 +24,11 @@ function App() {
               {/* Public pages */}
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<About />} />
-              <Route path="/previousorder" element={<PrevOrders />} />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/login" element={<UserLogin />} />
+
+              {/* User orders page */}
+              <Route path="/orderspage" element={<OrdersPage />} /> {/* <-- added */}
 
               {/* Admin entry point */}
               <Route path="/admin" element={<AdminDashboard />} />

@@ -1,0 +1,65 @@
+.orders-page {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 0 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.orders-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.order-item {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.order-status {
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.order-items {
+  list-style: disc;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+.order-items li {
+  margin-bottom: 5px;
+}
+
+.order-total {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.cancel-btn {
+  background-color: #d9534f;
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cancel-btn:hover {
+  background-color: #c9302c;
+}

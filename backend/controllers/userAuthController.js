@@ -1,4 +1,3 @@
-// controllers/userAuthController.js
 const User = require("../models/User");
 const generateToken = require("../utils/generateToken");
 
@@ -23,7 +22,6 @@ exports.sendOtp = async (req, res) => {
     }
 
     // TODO: Add Twilio or any SMS provider here for production
-    // For now, we just respond with OTP (production testing requires real SMS setup)
     return res.json({ message: "OTP would be sent here in production" });
 
   } catch (err) {
@@ -56,10 +54,17 @@ exports.verifyOtp = async (req, res) => {
       user = await User.create({ mobile: formattedMobile });
     }
 
+    // Generate token with role-based expiry (1 day for users, 7 days for admins)
+    const token = generateToken(user._id, user.role || "user"); // default to "user"
+
+    if (DEV_MODE) {
+      console.log(`DEV JWT Token for ${formattedMobile}: ${token}`);
+    }
+
     res.json({
       message: "Login successful",
       user,
-      token: generateToken(user._id, user.role),
+      token,
     });
   } catch (err) {
     console.error("Verify OTP error:", err);

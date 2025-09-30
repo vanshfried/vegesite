@@ -33,6 +33,9 @@ app.use("/auth/admin", require("./routes/adminAuthRoutes"));
 // 🔹 Protected routes
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
+// Order routes
+app.use("/api/orders", require("./routes/orderRoutes"));
+app.use("/api/users/orders", require("./routes/userOrdersRoutes"));
 
 // DB connection
 mongoose
