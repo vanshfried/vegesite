@@ -1,0 +1,85 @@
+/* Container for the archived orders pages */
+.admin-orders-page {
+  padding: 30px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.admin-orders-page h1 {
+  text-align: center;
+  color: #d82525; /* matches your brand red */
+  margin-bottom: 25px;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+/* Table styling */
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.orders-table thead {
+  background-color: #d82525;
+  color: #fff;
+}
+
+.orders-table th,
+.orders-table td {
+  padding: 15px 10px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+}
+
+.orders-table th {
+  font-weight: 600;
+}
+
+.orders-table tbody tr:hover {
+  background-color: #ffe6e6; /* light red hover */
+}
+
+/* Item list inside table cell */
+.orders-table td span {
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+/* Messages for empty or error states */
+.message {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.message.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .orders-table th,
+  .orders-table td {
+    padding: 10px 5px;
+    font-size: 0.85rem;
+  }
+
+  .admin-orders-page h1 {
+    font-size: 1.6rem;
+  }
+}

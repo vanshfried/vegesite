@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "../../css/CancelledOrders.css";
+import "../../css/ArchivedOrders.css";
 
 function CancelledOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -19,17 +18,18 @@ function CancelledOrders() {
           return;
         }
 
-        const res = await axios.get(`${API_URL}/api/orders`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          `${API_URL}/api/orders?archived=true`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-        const cancelled = res.data
-          .filter((o) => o.status === "cancelled")
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const cancelledOrders = res.data.filter(
+          (order) => order.status === "cancelled"
+        );
 
-        setOrders(cancelled);
+        setOrders(cancelledOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       } catch (err) {
-        console.error("Failed to fetch cancelled orders:", err);
+        console.error(err);
         setError(err.response?.data?.message || "Failed to load cancelled orders.");
       } finally {
         setLoading(false);
@@ -48,12 +48,12 @@ function CancelledOrders() {
   if (error) return <p className="message error">{error}</p>;
 
   return (
-    <div className="cancelled-orders-page">
-      <h1>Cancelled Orders History</h1>
+    <div className="admin-orders-page">
+      <h1>Cancelled Orders (Archived)</h1>
       {orders.length === 0 ? (
-        <p>No cancelled orders yet.</p>
+        <p>No cancelled orders archived.</p>
       ) : (
-        <table className="cancelled-orders-table">
+        <table className="orders-table">
           <thead>
             <tr>
               <th>Location</th>
@@ -64,7 +64,7 @@ function CancelledOrders() {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order._id} className="cancelled">
+              <tr key={order._id}>
                 <td>{formatAddress(order.location)}</td>
                 <td>
                   {order.items.map((item) => (

@@ -24,9 +24,6 @@ const AdminDashboard = () => {
     <div className="admin-dashboard">
       <header>
         <h1>Admin Dashboard</h1>
-        <button className="logout-btn" onClick={handleLogout}>
-          Logout
-        </button>
       </header>
 
       <div className="dashboard-cards">

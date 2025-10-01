@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "../../css/DeliveredOrders.css";
+import "../../css/ArchivedOrders.css";
 
 function DeliveredOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -19,17 +18,18 @@ function DeliveredOrders() {
           return;
         }
 
-        const res = await axios.get(`${API_URL}/api/orders`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          `${API_URL}/api/orders?archived=true`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-        const delivered = res.data
-          .filter((o) => o.status === "delivered")
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const deliveredOrders = res.data.filter(
+          (order) => order.status === "delivered"
+        );
 
-        setOrders(delivered);
+        setOrders(deliveredOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       } catch (err) {
-        console.error("Failed to fetch delivered orders:", err);
+        console.error(err);
         setError(err.response?.data?.message || "Failed to load delivered orders.");
       } finally {
         setLoading(false);
@@ -48,12 +48,12 @@ function DeliveredOrders() {
   if (error) return <p className="message error">{error}</p>;
 
   return (
-    <div className="delivered-orders-page">
-      <h1>Delivered Orders History</h1>
+    <div className="admin-orders-page">
+      <h1>Delivered Orders (Archived)</h1>
       {orders.length === 0 ? (
-        <p>No delivered orders yet.</p>
+        <p>No delivered orders archived.</p>
       ) : (
-        <table className="delivered-orders-table">
+        <table className="orders-table">
           <thead>
             <tr>
               <th>Location</th>
@@ -64,7 +64,7 @@ function DeliveredOrders() {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order._id} className="delivered">
+              <tr key={order._id}>
                 <td>{formatAddress(order.location)}</td>
                 <td>
                   {order.items.map((item) => (
