@@ -12,6 +12,7 @@ import AdminDashboard from "./admin/pages/AdminDashboard";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import UserLogin from "./pages/UserLogin";
+import AdminOrders from "./admin/pages/AdminOrders";
 
 function App() {
   return (
@@ -26,13 +27,11 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/login" element={<UserLogin />} />
-
               {/* User orders page */}
-              <Route path="/orderspage" element={<OrdersPage />} /> {/* <-- added */}
-
+              <Route path="/orders" element={<OrdersPage />} />{" "}
+              {/* <-- added */}
               {/* Admin entry point */}
               <Route path="/admin" element={<AdminDashboard />} />
-
               {/* Admin routes (protected) */}
               <Route
                 path="/admin/add-product"
@@ -47,6 +46,14 @@ function App() {
                 element={
                   <AdminRoute>
                     <ProductList />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/orders"
+                element={
+                  <AdminRoute>
+                    <AdminOrders />
                   </AdminRoute>
                 }
               />

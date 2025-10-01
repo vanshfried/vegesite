@@ -3,6 +3,15 @@
   margin: 30px auto;
   padding: 0 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.orders-page h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: #222;
 }
 
 .orders-list {
@@ -12,27 +21,35 @@
 }
 
 .order-item {
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px 25px;
   margin-bottom: 20px;
   background-color: #fff;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .order-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .order-status {
   color: #fff;
-  padding: 5px 12px;
-  border-radius: 15px;
-  font-weight: bold;
-  font-size: 0.9rem;
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .order-items {
@@ -42,24 +59,55 @@
 }
 
 .order-items li {
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
 }
 
 .order-total {
-  font-weight: bold;
-  margin-top: 10px;
+  font-weight: 700;
+  margin-top: 12px;
+  font-size: 1rem;
+}
+
+.order-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
 }
 
 .cancel-btn {
   background-color: #d9534f;
   color: #fff;
-  padding: 8px 14px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.2s;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .cancel-btn:hover {
   background-color: #c9302c;
+  transform: scale(1.03);
+}
+
+.countdown {
+  font-size: 0.85rem;
+  color: #555;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .order-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

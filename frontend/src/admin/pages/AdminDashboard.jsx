@@ -19,6 +19,7 @@ const AdminDashboard = () => {
       <ul>
         <li><a href="/admin/add-product">Add Product</a></li>
         <li><a href="/admin/products">View Products</a></li>
+        <li><a href="/admin/orders">Manage Orders</a></li>
       </ul>
       <button onClick={handleLogout}>Logout</button>
     </div>

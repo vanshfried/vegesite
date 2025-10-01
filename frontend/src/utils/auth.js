@@ -1,7 +1,32 @@
 // src/utils/auth.js
-import * as jwtDecode from "jwt-decode";
+import jwtDecodeCJS from "jwt-decode"; // For Vite, use this version 3.1.2 works best
 
-export const isUserLoggedIn = () => !!localStorage.getItem("userToken");
+const jwtDecode = (token) => {
+  // fallback for ESM vs CJS issues in Vite
+  return jwtDecodeCJS.default ? jwtDecodeCJS.default(token) : jwtDecodeCJS(token);
+};
+
+// ----- USER -----
+export const isUserLoggedIn = () => {
+  const token = localStorage.getItem("userToken");
+  if (!token) return false;
+
+  try {
+    const decoded = jwtDecode(token);
+
+    // Auto-logout if expired
+    if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+      logoutUser();
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.error("Invalid user token:", err);
+    logoutUser();
+    return false;
+  }
+};
 
 export const getUserId = () => {
   const token = localStorage.getItem("userToken");
@@ -11,18 +36,32 @@ export const getUserId = () => {
     const decoded = jwtDecode(token);
     return decoded.id; // make sure your JWT payload has 'id'
   } catch (err) {
-    console.error("Invalid token", err);
+    console.error("Invalid user token:", err);
     return null;
   }
 };
 
 export const getToken = () => localStorage.getItem("userToken");
 
-export const logoutUser = () => {
-  localStorage.removeItem("userToken");
-  // Do not clear cart here — backend will keep it
-};
+export const logoutUser = () => localStorage.removeItem("userToken");
 
-export const isAdminLoggedIn = () => !!localStorage.getItem("adminToken");
+// ----- ADMIN -----
+export const isAdminLoggedIn = () => {
+  const token = localStorage.getItem("adminToken");
+  if (!token) return false;
+
+  try {
+    const decoded = jwtDecode(token);
+    if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+      logoutAdmin();
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("Invalid admin token:", err);
+    logoutAdmin();
+    return false;
+  }
+};
 
 export const logoutAdmin = () => localStorage.removeItem("adminToken");

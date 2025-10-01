@@ -1,4 +1,3 @@
-// routes/orderRoutes.js
 const express = require("express");
 const Order = require("../models/Order");
 const { protect, adminOnly } = require("../middleware/authMiddleware");
@@ -7,7 +6,7 @@ const router = express.Router();
 
 // 📌 Place new order
 router.post("/", protect, async (req, res) => {
-  const { cart, subtotal, deliveryFee, total, location } = req.body;
+  const { cart, subtotal, deliveryFee, total, location, address } = req.body;
   try {
     if (!location || !location.latitude || !location.longitude) {
       return res.status(400).json({ message: "Location required" });
@@ -28,6 +27,8 @@ router.post("/", protect, async (req, res) => {
         type: "Point",
         coordinates: [location.longitude, location.latitude],
       },
+      address,
+      status: "pending",
     });
 
     await newOrder.save();
@@ -65,6 +66,12 @@ router.put("/:id/cancel", protect, async (req, res) => {
 router.put("/:id/status", protect, adminOnly, async (req, res) => {
   try {
     const { status } = req.body;
+    const allowedStatuses = ["pending", "confirmed", "out-for-delivery", "delivered", "cancelled"];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ message: "Order not found" });
 
@@ -77,22 +84,72 @@ router.put("/:id/status", protect, adminOnly, async (req, res) => {
   }
 });
 
+// 📌 Admin: update delivery time
+router.put("/:id/delivery-time", protect, adminOnly, async (req, res) => {
+  try {
+    const { deliveryTime } = req.body;
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    order.deliveryTime = deliveryTime;
+    await order.save();
+    res.json({ message: "Delivery time updated", order });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error updating delivery time" });
+  }
+});
+
+// 📌 Admin: delete an order
+router.delete("/:id", protect, adminOnly, async (req, res) => {
+  try {
+    const order = await Order.findByIdAndDelete(req.params.id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    res.json({ message: "Order deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error deleting order" });
+  }
+});
+
 // 📌 Admin: get all orders
 router.get("/", protect, adminOnly, async (req, res) => {
   try {
-    const orders = await Order.find().populate("user", "name email");
+    const orders = await Order.find()
+      .populate("user", "name email")
+      .populate("items.product", "name image price");
     res.json(orders);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error fetching all orders" });
   }
 });
 
-// 📌 User: get their own orders
+// 📌 Admin: get single order
+router.get("/:id", protect, adminOnly, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id)
+      .populate("user", "name email")
+      .populate("items.product", "name image price");
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    res.json(order);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error fetching order" });
+  }
+});
+
+// 📌 User: get own orders
 router.get("/my-orders", protect, async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
+    const orders = await Order.find({ user: req.user._id })
+      .sort({ createdAt: -1 })
+      .populate("items.product", "name image price");
     res.json(orders);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error fetching orders" });
   }
 });
