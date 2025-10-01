@@ -1,0 +1,40 @@
+.delivered-orders-page {
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #f0fff0; /* soft green background */
+  min-height: 100vh;
+}
+
+.delivered-orders-page h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2e7d32;
+}
+
+.delivered-orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.delivered-orders-table th,
+.delivered-orders-table td {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.delivered-orders-table th {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.delivered-orders-table tr:nth-child(even) {
+  background-color: #f1f8f1;
+}
+
+.delivered-orders-table tr.delivered {
+  font-weight: bold;
+  color: #2e7d32;
+}

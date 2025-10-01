@@ -2,7 +2,6 @@
 import "../../css/AdminDashboard.css";
 import AdminLogin from "./AdminLogin";
 
-
 const AdminDashboard = () => {
   const token = localStorage.getItem("adminToken");
 
@@ -13,15 +12,30 @@ const AdminDashboard = () => {
 
   if (!token) return <AdminLogin />;
 
+  const adminActions = [
+    { name: "Add Product", link: "/admin/add-product" },
+    { name: "View Products", link: "/admin/products" },
+    { name: "Manage Orders", link: "/admin/orders" },
+    { name: "Cancelled Orders", link: "/admin/cancelled" },
+    { name: "Delivered Orders", link: "/admin/delivered" },
+  ];
+
   return (
     <div className="admin-dashboard">
-      <h2>Admin Dashboard</h2>
-      <ul>
-        <li><a href="/admin/add-product">Add Product</a></li>
-        <li><a href="/admin/products">View Products</a></li>
-        <li><a href="/admin/orders">Manage Orders</a></li>
-      </ul>
-      <button onClick={handleLogout}>Logout</button>
+      <header>
+        <h1>Admin Dashboard</h1>
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
+      </header>
+
+      <div className="dashboard-cards">
+        {adminActions.map((action, idx) => (
+          <a key={idx} href={action.link} className="dashboard-card">
+            {action.name}
+          </a>
+        ))}
+      </div>
     </div>
   );
 };
