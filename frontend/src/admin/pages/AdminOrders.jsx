@@ -18,6 +18,7 @@ function AdminOrders() {
     cancelled: "#d9534f",
   };
 
+  // Fetch all orders for admin
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem("adminToken");
@@ -58,9 +59,7 @@ function AdminOrders() {
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setOrders((prev) =>
-        prev.map((o) => (o._id === id ? res.data.order : o))
-      );
+      setOrders((prev) => prev.map((o) => (o._id === id ? res.data.order : o)));
       showMessage("success", "Order status updated!");
       setEditing(null);
     } catch (err) {
@@ -113,7 +112,9 @@ function AdminOrders() {
   return (
     <div className="admin-orders-page">
       <h1>All Orders</h1>
-      {message && <div className={`message ${message.type}`}>{message.text}</div>}
+      {message && (
+        <div className={`message ${message.type}`}>{message.text}</div>
+      )}
 
       <div style={{ marginBottom: "10px", textAlign: "right" }}>
         <button className="clear-history-btn" onClick={handleClearHistory}>
@@ -127,7 +128,8 @@ function AdminOrders() {
         <table className="orders-table">
           <thead>
             <tr>
-              <th>Location</th>
+              <th>User</th>
+              <th>Phone</th>
               <th>Items</th>
               <th>Total</th>
               <th>Status</th>
@@ -138,10 +140,15 @@ function AdminOrders() {
           <tbody>
             {orders.map((order) => (
               <tr key={order._id} className={order.status}>
-                <td>{formatAddress(order.location)}</td>
+                <td>{order.user?.name || "N/A"}</td>
                 <td>
-                  {order.items.map((item) => (
-                    <span key={item._id}>
+                  {order.user?.mobile
+                    ? order.user.mobile.replace(/^(\+91)/, "")
+                    : "N/A"}
+                </td>
+                <td>
+                  {order.items.map((item, idx) => (
+                    <span key={item.product?._id || idx}>
                       {item.name}×{item.quantity};{" "}
                     </span>
                   ))}
@@ -172,9 +179,13 @@ function AdminOrders() {
                 <td>{new Date(order.createdAt).toLocaleString()}</td>
                 <td>
                   {editing === order._id ? (
-                    <button onClick={() => setEditing(null)}>❌ Cancel Edit</button>
+                    <button onClick={() => setEditing(null)}>
+                      ❌ Cancel Edit
+                    </button>
                   ) : (
-                    <button onClick={() => setEditing(order._id)}>✏️ Update</button>
+                    <button onClick={() => setEditing(order._id)}>
+                      ✏️ Update
+                    </button>
                   )}
                 </td>
               </tr>
