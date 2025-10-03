@@ -4,7 +4,12 @@ const UserSchema = new mongoose.Schema(
   {
     name: { type: String, trim: true },
     mobile: { type: String, required: true, unique: true },
-    role: { type: String, enum: ["user", "admin"], default: "user" },
+    address: {
+      houseNo: { type: String, default: "" },
+      laneOrSector: { type: String, default: "" },
+      landmark: { type: String, default: "" },
+      pincode: { type: String, default: "" },
+    },
   },
   { timestamps: true }
 );

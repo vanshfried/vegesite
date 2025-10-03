@@ -23,7 +23,7 @@ import AdminOrders from "./admin/pages/AdminOrders";
 import DeliveredOrders from "./admin/pages/DeliveredOrders";
 import CancelledOrders from "./admin/pages/CancelledOrders";
 import NotFound from "./pages/NotFound";
-
+import SettingsPage from "./pages/SettingsPage";
 // Helper layout for pages with headers
 function Layout({ children }) {
   const location = useLocation();
@@ -81,6 +81,14 @@ function App() {
               element={
                 <Layout>
                   <OrdersPage />
+                </Layout>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <Layout>
+                  <SettingsPage />
                 </Layout>
               }
             />
