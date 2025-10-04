@@ -1,25 +1,64 @@
-/* Dashboard Layout */
-.dashboard-container {
-  display: flex;
-  min-height: 100vh;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #f4f5f7;
+/* ---------------- BASE VARIABLES (Modern Theme) ---------------- */
+:root {
+  /* Colors - Clean, professional theme */
+  --color-primary: #008568; /* Main Brand Color (Blue) */
+  --color-primary-dark: #0056b3;
+  --color-success: #28a745;  /* Success/Save Button */
+  --color-success-dark: #1e7e34;
+  
+  --color-background: #f8f9fa; /* Page Background */
+  --color-surface: #fff;      /* Card/Sidebar Background */
+  
+  --color-text-dark: #212529; /* Headings */
+  --color-text-regular: #495057; /* Default Text */
+  --color-text-light: #6c757d;   /* Labels/Secondary Text */
+  --color-border: #e9ecef;    /* Cleaner Border lines */
+  --color-input-bg: #fff;     /* Input background */
+
+  /* Spacing & Radius */
+  --space-xs: 5px;
+  --space-sm: 10px;
+  --space-md: 15px;
+  --space-lg: 20px;
+  --space-xl: 25px;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Fonts */
+  --font-body: "Poppins", "Segoe UI", sans-serif;
+  --font-size-sm: 0.8rem;
+  --font-size-reg: 0.9rem;
 }
 
-/* Sidebar */
+
+/* ---------------- BASE LAYOUT ---------------- */
+.dashboard-container {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  background: var(--color-background);
+  color: var(--color-text-regular);
+}
+
+/* Sidebar (desktop) */
 .dashboard-sidebar {
-  width: 220px;
-  background: #fff;
-  padding: 20px;
-  border-right: 1px solid #ddd;
+  width: 220px; /* Slightly wider sidebar */
+  background: var(--color-surface);
+  padding: var(--space-lg);
+  border-right: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
 }
 
 .dashboard-sidebar h2 {
-  margin-bottom: 20px;
-  color: #fc8019;
+  margin-bottom: var(--space-lg);
+  color: var(--color-primary);
   text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .dashboard-sidebar ul {
@@ -28,133 +67,286 @@
 }
 
 .dashboard-sidebar li {
-  padding: 12px 10px;
-  margin-bottom: 10px;
-  border-radius: 8px;
+  padding: var(--space-sm) 12px;
+  margin-bottom: var(--space-sm);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background 0.2s ease;
+  font-weight: 500;
+  color: var(--color-text-regular);
+  transition: all 0.2s ease;
 }
 
-.dashboard-sidebar li:hover,
+.dashboard-sidebar li:hover {
+  background: #e9f3ff; /* Very light blue hover */
+  color: var(--color-primary-dark);
+}
+
 .dashboard-sidebar li.active {
-  background: #fc8019;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-surface);
+  box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Mobile Tabs (Hidden on desktop) */
+.mobile-tabs {
+  display: none; 
 }
 
 /* Main content */
 .dashboard-main {
   flex: 1;
-  padding: 30px;
+  padding: var(--space-xl);
 }
 
 .dashboard-main h1 {
-  margin-bottom: 20px;
-  color: #333;
+  font-size: clamp(1.4rem, 4vw, 1.8rem); 
+  margin-bottom: var(--space-lg);
+  font-weight: 600;
+  color: var(--color-text-dark);
 }
 
-/* Editable cards */
-.settings-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 15px 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease;
+
+/* ---------------- EDITABLE FIELDS (Inline Buttons) ---------------- */
+.settings-field {
+  margin-bottom: var(--space-md);
+  background: var(--color-surface);
+  padding: var(--space-md) 16px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Enhanced shadow */
+  border: 1px solid var(--color-border); /* Subtle border */
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.settings-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+.settings-field:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
 }
 
-.card-label {
-  font-size: 0.85rem;
-  color: #888;
-  margin-bottom: 8px;
+.field-label {
+  font-size: var(--font-size-sm);
   font-weight: 500;
+  color: var(--color-text-light);
+  margin-bottom: 4px; /* Reduced margin */
+  display: block;
 }
 
-.card-value {
-  font-size: 1rem;
-  color: #444;
-  margin-bottom: 8px;
+/* --- Display View (Value + Edit Button) --- */
+.field-display {
+  display: flex;
+  flex-direction: row; 
+  justify-content: space-between; 
+  align-items: center; 
+  gap: var(--space-sm);
 }
 
-input,
-textarea {
-  padding: 10px;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+.field-display .value-text {
+  font-weight: 500;
+  color: var(--color-text-dark);
+  font-size: var(--font-size-reg);
+  flex: 1; 
+  /* Ensures long text doesn't break layout before button */
+  overflow: hidden; 
+  white-space: nowrap;
+  text-overflow: ellipsis; 
+}
+
+/* --- Edit View (Input + Save Button) --- */
+.field-edit {
+  display: flex;
+  flex-direction: row; 
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+input {
+  flex: 1;
+  width: 100%;
+  padding: 8px var(--space-sm);
+  font-size: var(--font-size-reg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
   outline: none;
-  font-family: inherit;
+  box-sizing: border-box; 
+  background: var(--color-input-bg);
+  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
-textarea {
-  resize: vertical;
-  min-height: 60px;
+input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Focus ring */
+  background: var(--color-surface);
+}
+
+/* Buttons (Smaller and aligned for inline use) */
+.edit-btn,
+.save-btn {
+  font-size: 0.8rem;
+  padding: 5px 10px; /* Reduced padding */
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: 0.2s all;
+  font-weight: 500;
+  /* Ensure button doesn't shrink when space is tight */
+  flex-shrink: 0; 
 }
 
 .edit-btn {
-  align-self: flex-end;
-  padding: 8px 16px;
-  font-size: 0.85rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background-color: #fc8019;
-  color: white;
-  transition: background 0.3s ease;
-  margin-top: 5px;
+  background-color: var(--color-primary);
+  color: var(--color-surface);
 }
-
 .edit-btn:hover {
-  background-color: #e37200;
+  background-color: var(--color-primary-dark);
 }
 
-.edit-btn.save {
-  background-color: #4caf50;
+.save-btn {
+  background-color: var(--color-success);
+  color: var(--color-surface);
+}
+.save-btn:hover {
+  background-color: var(--color-success-dark);
 }
 
-.edit-btn.save:hover {
-  background-color: #3e8e41;
+/* Floating Toast */
+.toast {
+  position: absolute;
+  top: -10px; /* Pushed up slightly */
+  right: var(--space-sm);
+  background: var(--color-success);
+  color: var(--color-surface);
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  animation: fadein 0.2s, fadeout 0.2s 1.2s;
+  z-index: 10;
 }
 
-.message {
-  font-size: 0.8rem;
-  color: #4caf50;
-  margin-top: 5px;
-  align-self: flex-start;
+@keyframes fadein { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+@keyframes fadeout { from { opacity:1; } to { opacity:0; } }
+
+
+/* ---------------- ADDRESS BOX ---------------- */
+.address-box {
+  margin-top: var(--space-lg);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* Dummy section */
+.address-box h3 {
+  margin: 0;
+  padding: var(--space-md) 16px;
+  background: var(--color-primary);
+  color: var(--color-surface);
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Collapsible */
+.address-box.collapsed {
+  max-height: 50px; /* Adjusted height */
+}
+
+.address-box.expanded {
+  max-height: 800px;
+  transition: max-height 0.4s ease-in-out;
+}
+
+/* Address Fields Padding */
+.address-box .settings-field {
+    /* Override top-level settings-field margin for address box layout */
+    margin: var(--space-sm) var(--space-md); 
+    padding: var(--space-md);
+}
+
+/* ---------------- DUMMY SECTION ---------------- */
 .dummy-section {
-  padding: 20px;
-  background: #fff3e0;
-  border-radius: 12px;
-  color: #ff9800;
+  padding: var(--space-md);
+  background: #e7f5ff; /* Soft blue background */
+  border-radius: var(--radius-lg);
+  color: #0056b3;
   text-align: center;
   font-style: italic;
+  font-weight: 500;
+  border: 1px dashed #b3d9ff;
 }
 
-/* Responsive */
+
+/* ---------------- MOBILE RESPONSIVE (max-width: 768px) ---------------- */
 @media (max-width: 768px) {
+  
   .dashboard-container {
     flex-direction: column;
   }
+
   .dashboard-sidebar {
-    width: 100%;
-    flex-direction: row;
+    display: none;
+  }
+  
+  /* Mobile tabs are shown on mobile */
+  .mobile-tabs {
+    display: flex;
+    justify-content: space-around;
+    gap: var(--space-xs);
+    padding: 8px var(--space-sm);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    list-style: none;
+    flex-wrap: nowrap; /* Keep tabs on one line if possible */
     overflow-x: auto;
   }
-  .dashboard-sidebar ul {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
+
+  .mobile-tabs li {
+    flex: 0 0 auto;
+    min-width: 70px;
+    text-align: center;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    background: #f5f5f5;
+    font-size: var(--font-size-sm);
   }
-  .dashboard-sidebar li {
-    margin-bottom: 0;
+
+  .mobile-tabs li.active {
+    background: var(--color-primary);
+    color: var(--color-surface);
+  }
+
+  .dashboard-main {
+    padding: var(--space-md);
+  }
+
+  /* Force inline fields to stack vertically on small screens */
+  .field-display,
+  .field-edit {
+    flex-direction: column; 
+    align-items: stretch;
+  }
+
+  /* Ensure the text value takes up the whole line above the edit button */
+  .field-display .value-text {
+    white-space: normal;
+    text-overflow: clip;
+    margin-bottom: var(--space-xs);
+  }
+
+  /* Buttons and Inputs go full width */
+  .edit-btn,
+  .save-btn {
+    width: 100%;
+    font-size: 0.75rem;
+    padding: 8px;
+  }
+
+  input {
+    font-size: var(--font-size-sm);
+    padding: 8px;
   }
 }

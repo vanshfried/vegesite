@@ -56,7 +56,8 @@ function CancelledOrders() {
         <table className="orders-table">
           <thead>
             <tr>
-              <th>Location</th>
+              <th>Phone Number</th>
+              <th>Name</th>
               <th>Items</th>
               <th>Total</th>
               <th>Placed At</th>
@@ -65,7 +66,12 @@ function CancelledOrders() {
           <tbody>
             {orders.map((order) => (
               <tr key={order._id}>
-                <td>{formatAddress(order.location)}</td>
+                <td>
+                  {order.user?.mobile
+                    ? order.user.mobile.replace(/^(\+91)/, "")
+                    : "N/A"}
+                </td>
+                <td>{order.user?.name || "N/A"}</td>
                 <td>
                   {order.items.map((item) => (
                     <span key={item._id}>

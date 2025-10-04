@@ -50,6 +50,7 @@ function Header() {
         {/* Restricted links */}
         <span className="nav-button" onClick={() => handleRestrictedClick("/cart")}>Cart</span>
         <span className="nav-button" onClick={() => handleRestrictedClick("/orders")}>Orders</span>
+        <span className="nav-button" onClick={() => handleRestrictedClick("/Settings")}>Settings</span>
 
 
         {/* Login / Logout */}
