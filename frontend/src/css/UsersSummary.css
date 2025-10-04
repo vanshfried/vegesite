@@ -1,0 +1,109 @@
+/* =================== Container =================== */
+.users-summary-page {
+  padding: 30px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Page title */
+.users-summary-page h1 {
+  font-size: 32px;
+  margin-bottom: 25px;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+}
+
+/* =================== Table =================== */
+.users-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.users-summary-table th,
+.users-summary-table td {
+  padding: 12px 18px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.users-summary-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.users-summary-table tbody tr:hover {
+  background-color: #f1f5f9;
+  transition: background 0.2s ease;
+}
+
+/* =================== Button =================== */
+.view-details-btn {
+  padding: 6px 14px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.view-details-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+/* =================== Error messages =================== */
+.message.error {
+  color: #d9534f;
+  font-weight: bold;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* =================== Mobile Responsive =================== */
+@media (max-width: 768px) {
+  .users-summary-table th,
+  .users-summary-table td {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .view-details-btn {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .users-summary-page {
+    padding: 20px 10px;
+  }
+
+  .users-summary-table th,
+  .users-summary-table td {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .view-details-btn {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+
+  /* Wrap long content in table cells */
+  .users-summary-table td {
+    word-wrap: break-word;
+  }
+}

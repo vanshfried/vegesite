@@ -18,6 +18,8 @@ const AdminDashboard = () => {
     { name: "Manage Orders", link: "/admin/orders" },
     { name: "Cancelled Orders", link: "/admin/cancelled" },
     { name: "Delivered Orders", link: "/admin/delivered" },
+    { name: "User Summary", link: "/admin/user-summary" },
+
   ];
 
   return (

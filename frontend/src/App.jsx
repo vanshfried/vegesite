@@ -24,6 +24,9 @@ import DeliveredOrders from "./admin/pages/DeliveredOrders";
 import CancelledOrders from "./admin/pages/CancelledOrders";
 import NotFound from "./pages/NotFound";
 import SettingsPage from "./pages/SettingsPage";
+import UsersSummary from "./admin/pages/UsersSummary";
+import UserDetails from "./admin/pages/UserDetails"; // NEW PAGE
+
 // Helper layout for pages with headers
 function Layout({ children }) {
   const location = useLocation();
@@ -156,6 +159,27 @@ function App() {
                 <Layout>
                   <AdminRoute>
                     <CancelledOrders />
+                  </AdminRoute>
+                </Layout>
+              }
+            />
+            <Route
+              path="/admin/user-summary"
+              element={
+                <Layout>
+                  <AdminRoute>
+                    <UsersSummary />
+                  </AdminRoute>
+                </Layout>
+              }
+            />
+            {/* NEW: User details page */}
+            <Route
+              path="/admin/user/:userId"
+              element={
+                <Layout>
+                  <AdminRoute>
+                    <UserDetails />
                   </AdminRoute>
                 </Layout>
               }

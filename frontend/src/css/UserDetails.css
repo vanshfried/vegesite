@@ -1,0 +1,180 @@
+.user-details-page {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.back-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+.back-btn:hover {
+  background-color: #0056b3;
+}
+
+/* User info & metrics container */
+.user-info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #f9f9f9;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  gap: 10px;
+}
+
+/* User details section */
+.user-info > .user-details {
+  flex: 1 1 250px;
+  min-width: 200px;
+}
+
+.user-info h2 {
+  font-size: 20px;
+  margin: 0 0 5px 0;
+}
+
+.user-info p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Metrics cards */
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex: 1 1 200px;
+  justify-content: flex-end;
+}
+
+.metric-card {
+  flex: 1 1 120px;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 12px 15px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.metric-card h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.metric-card p {
+  margin: 3px 0 0 0;
+  font-size: 12px;
+  color: #777;
+}
+
+/* Orders table */
+.user-orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.user-orders-table th,
+.user-orders-table td {
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-size: 13px;
+}
+
+.user-orders-table th {
+  background-color: #f1f1f1;
+}
+
+.user-orders-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Status pill */
+.status-pill {
+  padding: 3px 8px;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 12px;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.status-pill.processing {
+  background-color: #f0ad4e;
+}
+.status-pill.out-for-delivery {
+  background-color: #5bc0de;
+}
+.status-pill.delivered {
+  background-color: #5cb85c;
+}
+.status-pill.cancelled {
+  background-color: #d9534f;
+}
+
+/* ========================= MOBILE STYLES ========================= */
+@media (max-width: 768px) {
+  .user-info {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .metrics {
+    justify-content: space-between;
+  }
+
+  .metric-card {
+    flex: 1 1 45%;
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .user-info h2 {
+    font-size: 18px;
+  }
+
+  .user-info p {
+    font-size: 12px;
+  }
+
+  .user-orders-table th,
+  .user-orders-table td {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .metric-card {
+    flex: 1 1 100%;
+    padding: 6px 10px;
+  }
+
+  .user-orders-table th,
+  .user-orders-table td {
+    font-size: 11px;
+    padding: 4px 6px;
+  }
+
+  .user-info h2 {
+    font-size: 16px;
+  }
+
+  .user-info p {
+    font-size: 11px;
+  }
+}

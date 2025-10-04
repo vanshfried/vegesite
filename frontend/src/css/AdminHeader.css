@@ -1,28 +1,75 @@
+/* Base Styles - Mobile First */
 .admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #222;
   color: white;
-  padding: 12px 20px;
+  padding: 10px 15px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  position: relative;
 }
 
 .admin-header .logo h1 {
-  font-size: 20px;
+  font-size: 18px;
   margin: 0;
 }
 
-.admin-nav {
+/* Hamburger Menu */
+.hamburger {
   display: flex;
-  gap: 20px;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 22px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background-color: white;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Nav - mobile hidden by default */
+.admin-nav {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  top: 60px;
+  right: 15px;
+  background-color: #222;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+.admin-nav.open {
+  display: flex;
 }
 
 .admin-nav a {
   color: white;
   text-decoration: none;
   font-weight: 500;
+  font-size: 14px;
   transition: color 0.2s;
 }
 
@@ -34,13 +81,39 @@
   background-color: #d9534f;
   border: none;
   color: white;
-  padding: 6px 12px;
+  padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
+  font-size: 13px;
   transition: background 0.2s;
 }
 
 .logout-btn:hover {
   background-color: #c9302c;
+}
+
+/* Tablet and above - show nav horizontally, hide hamburger */
+@media (min-width: 600px) {
+  .hamburger {
+    display: none;
+  }
+
+  .admin-nav {
+    display: flex !important;
+    position: static;
+    flex-direction: row;
+    gap: 20px;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .admin-nav a {
+    font-size: 15px;
+  }
+
+  .logout-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
 }
